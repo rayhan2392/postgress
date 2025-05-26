@@ -77,3 +77,47 @@ GROUP BY name
 
 --       problem-05
 
+SELECT common_name
+FROM species
+LEFT JOIN sightings ON species.species_id = sightings.species_id
+WHERE sightings.sighting_id IS NULL;
+
+
+                  --problem-06
+SELECT 
+    species.common_name, 
+    sightings.sighting_time, 
+    rangers.name
+FROM sightings
+JOIN species ON sightings.species_id = species.species_id
+JOIN rangers ON sightings.ranger_id = rangers.ranger_id
+ORDER BY sightings.sighting_time DESC
+LIMIT 2;
+
+
+-- proble-07
+
+UPDATE species
+set conservation_status = 'Historic'
+WHERE discovery_date < '1800-01-01'
+
+
+--problem -08
+
+SELECT 
+    sighting_id,
+    CASE 
+        WHEN EXTRACT(HOUR FROM sighting_time) < 12 THEN 'Morning'
+        WHEN EXTRACT(HOUR FROM sighting_time) BETWEEN 12 AND 17 THEN 'Afternoon'
+        ELSE 'Evening'
+    END AS time_of_day
+FROM sightings;
+
+
+-- problem 09
+DELETE FROM rangers
+WHERE ranger_id NOT IN (
+    SELECT DISTINCT ranger_id FROM sightings
+);
+
+
